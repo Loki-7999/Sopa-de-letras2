@@ -81,9 +81,11 @@ function drawGrid() {
       div.dataset.row = r;
       div.dataset.col = c;
       div.addEventListener('mousedown', startSelect);
+    div.addEventListener('touchstart', startSelect);
       div.addEventListener('touchstart', startSelect);
       div.addEventListener('mouseenter', dragSelect);
       div.addEventListener('mouseup', endSelect);
+    div.addEventListener('touchend', endSelect);
       div.addEventListener('touchend', endSelect);
       gridContainer.appendChild(div);
     }
@@ -95,6 +97,11 @@ function updateWordList() {
 
 let isMouseDown = false;
 function startSelect(e) {
+    if (e.touches) e = e.touches[0];  // Asegurar que 'e' sea correcto en dispositivos táctiles
+    selected = []; // reiniciar la selección de palabras
+    foundWords = []; // reiniciar las palabras encontradas
+    startRow = Math.floor((e.pageY - div.offsetTop) / gridSize); 
+    startCol = Math.floor((e.pageX - div.offsetLeft) / gridSize);
   isMouseDown = true;
   selected = [{row: +e.target.dataset.row, col: +e.target.dataset.col, el: e.target}];
   e.target.classList.add('selected');
