@@ -151,3 +151,51 @@ function shuffle(arr) {
 }
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+
+let timer;
+let score = 0;
+let timeLeft = 300; // Tiempo de 5 minutos para el contrarreloj
+
+function startTimer() {
+    timer = setInterval(function() {
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            endGame();  // Finalizar juego cuando el tiempo se acabe
+        } else {
+            timeLeft--;
+            document.getElementById("timer").textContent = "Tiempo: " + timeLeft + "s";
+        }
+    }, 1000);
+}
+
+function endGame() {
+    alert("¡Se acabó el tiempo! Puntuación final: " + score);
+    // Mostrar resultados y detener juego
+    // Aquí puedes agregar una pantalla de resultados más sofisticada
+}
+
+function updateScore() {
+    score += 10;  // Sumar puntos por cada palabra encontrada
+    document.getElementById("score").textContent = "Puntos: " + score;
+}
+
+function playSound(type) {
+    const audio = new Audio(type === 'correct' ? 'correct-sound.mp3' : 'error-sound.mp3');
+    audio.play();
+}
+
+// Modificar la función para verificar palabras
+function verifyWord(word) {
+    if (wordIsFound(word)) {
+        updateScore();
+        playSound('correct');
+    } else {
+        playSound('error');
+    }
+}
+
+// Aquí se crea la interfaz de resultados en el HTML.
+document.getElementById('game-info').innerHTML = `
+  <div id="timer">Tiempo: ${timeLeft}s</div>
+  <div id="score">Puntos: 0</div>
+`;
